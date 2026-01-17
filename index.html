@@ -106,6 +106,7 @@
         <a href="https://maps.app.goo.gl/vcWebUQrrLSY8gX4A" target="_blank" class="badge" style="text-decoration:none">🗺️ Equip</a>
         <a href="https://www.windy.com/?37.233,-77.400,8" target="_blank" class="badge" style="text-decoration:none">🌪️ Windy</a>
         <button id="themeToggle" class="badge">🌙 Dark</button>
+                <button id="rosCalc" class="badge">🔥 R.O.S.</button>
       </div>
     </header>
 
@@ -119,7 +120,23 @@
 
     <footer class="app-footer">
       <div class="statusbar" style="text-align:center;margin-bottom:0.5rem" aria-live="polite">
-        <span id="status-noaa" class="badge" title="NOAA Weather API">NOAA ⏳</span>
+        
+    <!-- R.O.S. Calculator Modal -->
+    <div id="rosModal" class="modal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background-color:rgba(0,0,0,0.7);">
+      <div style="background-color:#fff; margin:5% auto; padding:20px; border-radius:8px; width:90%; max-width:600px;">
+        <span id="closeModal" style="float:right; font-size:28px; font-weight:bold; cursor:pointer;">&times;</span>
+        <h2>🔥 Rate of Spread Calculator</h2>
+        <div>
+          <label>Wind Speed (mph):</label><input type="number" id="windSpeed" value="5" /><br/><br/>
+          <label>Fuel Model (1-13):</label><input type="number" id="fuelModel" value="1" min="1" max="13" /><br/><br/>
+          <label>Slope (%):</label><input type="number" id="slope" value="0" /><br/><br/>
+          <label>Fuel Moisture (%):</label><input type="number" id="fuelMoisture" value="8" /><br/><br/>
+          <button onclick="calculateROS()" style="padding:10px 20px; background:#007bff; color:white; border:none; border-radius:4px; cursor:pointer;">Calculate</button>
+        </div>
+        <div id="results" style="margin-top:20px; padding:10px; background:#f0f0f0; border-radius:4px;"></div>
+      </div>
+    </div>
+<span id="status-noaa" class="badge" title="NOAA Weather API">NOAA ⏳</span>
         <span id="status-firms" class="badge" title="NASA FIRMS GeoJSON">FIRMS ⏳</span>
         <span id="status-tiles" class="badge" title="Map tiles (OSM)">Tiles ⏳</span>
       </div>
@@ -368,5 +385,50 @@
         });
       }
     </script>
+<script src="fire-behavior.js"></script>
   </body>
 </html>
+
+
+<script>
+  // R.O.S. Calculator
+  const rosCalcBtn = document.getElementById('rosCalc');
+  const rosModal = document.getElementById('rosModal');
+  const closeModal = document.getElementById('closeModal');
+  
+  if (rosCalcBtn) {
+    rosCalcBtn.addEventListener('click', () => {
+      rosModal.style.display = 'block';
+    });
+  }
+  
+  if (closeModal) {
+    closeModal.addEventListener('click', () => {
+      rosModal.style.display = 'none';
+    });
+  }
+  
+  window.onclick = function(event) {
+    if (event.target == rosModal) {
+      rosModal.style.display = 'none';
+    }
+  };
+  
+  function calculateROS() {
+    const windSpeed = parseFloat(document.getElementById('windSpeed').value);
+    const fuelModel = parseInt(document.getElementById('fuelModel').value);
+    const slope = parseFloat(document.getElementById('slope').value);
+    const moisture = parseFloat(document.getElementById('fuelMoisture').value);
+    
+    const calculator = new FireBehaviorCalculator();
+    const results = calculator.calculateFireBehavior(windSpeed, fuelModel, slope, moisture);
+    
+    document.getElementById('results').innerHTML = `
+      <h3>Results:</h3>
+      <p><strong>Rate of Spread:</strong> ${results.rateOfSpread.toFixed(2)} chains/hour</p>
+      <p><strong>Flame Length:</strong> ${results.flameLength.toFixed(2)} feet</p>
+      <p><strong>Fireline Intensity:</strong> ${results.firelineIntensity.toFixed(0)} BTU/ft/s</p>
+      <p><strong>Heat Per Unit Area:</strong> ${results.heatPerUnitArea.toFixed(0)} BTU/ft²</p>
+    `;
+  }
+</script>
