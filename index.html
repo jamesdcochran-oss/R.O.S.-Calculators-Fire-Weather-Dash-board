@@ -7,7 +7,12 @@
 
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Favicon -->
 
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="icon" type="image/png" href="five-forks-fire-weather.png">
+    <link rel="shortcut icon" type="image/png" href="five-forks-fire-weather.png">
     <style>
       /* Five Forks Fire Weather — Single-file build
          - Live data: NOAA (NWS) + NASA FIRMS
@@ -98,17 +103,23 @@
     </style>
   </head>
   <body>
-    <header class="app-header">
-      <h1>🔥 Five Forks Fire Weather</h1>
-      <div class="quick-links">
-        <a href="https://firms.modaps.eosdis.nasa.gov/map/" target="_blank" class="badge" style="text-decoration:none">🛰️ FIRMS</a>
-        <a href="https://www.weather.gov/akq/" target="_blank" class="badge" style="text-decoration:none">🌧️ NWS</a>
-        <a href="https://maps.app.goo.gl/vcWebUQrrLSY8gX4A" target="_blank" class="badge" style="text-decoration:none">🗺️ Equip</a>
-        <a href="https://www.windy.com/?37.233,-77.400,8" target="_blank" class="badge" style="text-decoration:none">🌪️ Windy</a>
-        <button id="themeToggle" class="badge">🌙 Dark</button>
-        <button id="rosCalc" class="badge">🔥 R.O.S.</button>
-      </div>
-    </header>
+   <header class="app-header">
+  <div style="display:flex;align-items:center;gap:0.5rem;">
+    <img src="five-forks-fire-weather.png"
+         alt="Five Forks Fire Weather"
+         style="height:28px;width:auto;border-radius:4px;">
+    <h1>🔥 Five Forks Fire Weather</h1>
+  </div>
+  <div class="quick-links">
+    <a href="https://firms.modaps.eosdis.nasa.gov/map/" target="_blank" class="badge" style="text-decoration:none">🛰️ FIRMS</a>
+    <a href="https://www.weather.gov/akq/" target="_blank" class="badge" style="text-decoration:none">🌧️ NWS</a>
+    <a href="https://maps.app.goo.gl/vcWebUQrrLSY8gX4A" target="_blank" class="badge" style="text-decoration:none">🗺️ Equip</a>
+    <a href="https://www.windy.com/?37.233,-77.400,8" target="_blank" class="badge" style="text-decoration:none">🌪️ Windy</a>
+    <button id="themeToggle" class="badge">🌙 Dark</button>
+    <button id="rosCalc" class="badge">🔥 R.O.S.</button>
+  </div>
+</header>
+
 
     <main>
       <section id="cards" class="cards" aria-label="County conditions"></section>
