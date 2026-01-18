@@ -4,9 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fire Weather Dashboard</title>
+    <script src="fuel-models.js"></script>
+    <script src="fire-behavior.js"></script>
 </head>
 <body>
-    <h1>Welcome to the Fire Weather Dashboard</h1>
-    <p>This is a placeholder for the Fire Weather Dashboard project.</p>
+    <h1>Fire Weather Results</h1>
+    <div id="results"></div>
+
+    <script>
+        function displayResults() {
+            // This function would integrate calculations from fuel-models.js and fire-behavior.js
+            // For demo purposes, I'll create a static message
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<p>Dynamic Fire Weather Results Displayed Here.</p>';
+            // You would call functions from fuel-models.js and fire-behavior.js to get real results
+        }
+
+        // Call the function to display results
+        displayResults();
+    </script>
 </body>
 </html>
