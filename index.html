@@ -106,7 +106,7 @@
         <a href="https://maps.app.goo.gl/vcWebUQrrLSY8gX4A" target="_blank" class="badge" style="text-decoration:none">🗺️ Equip</a>
         <a href="https://www.windy.com/?37.233,-77.400,8" target="_blank" class="badge" style="text-decoration:none">🌪️ Windy</a>
         <button id="themeToggle" class="badge">🌙 Dark</button>
-                <button id="rosCalc" class="badge">🔥 R.O.S.</button>
+        <button id="rosCalc" class="badge">🔥 R.O.S.</button>
       </div>
     </header>
 
@@ -128,33 +128,36 @@
         <h2>🔥 Rate of Spread Calculator</h2>
         <div>
           <label>Wind Speed (mph):</label><input type="number" id="windSpeed" value="5" /><br/><br/>
-<label>Fuel Model:</label>
-<select id="fuelModel" style="width:100%; padding:5px; margin-bottom:10px;">
-  <option value="1">Model 1 - Short Grass (1 foot)</option>
-  <option value="2">Model 2 - Timber (grass and understory)</option>
-  <option value="3">Model 3 - Tall Grass (2.5 feet)</option>
-  <option value="4">Model 4 - Chaparral (6 feet)</option>
-  <option value="5">Model 5 - Brush (2 feet)</option>
-  <option value="6">Model 6 - Dormant Brush</option>
-  <option value="7">Model 7 - Southern Rough</option>
-  <option value="8">Model 8 - Closed Timber Litter</option>
-  <option value="9">Model 9 - Hardwood Litter</option>
-  <option value="10">Model 10 - Timber (litter and understory)</option>
-  <option value="11">Model 11 - Light Logging Slash</option>
-  <option value="12">Model 12 - Medium Logging Slash</option>
-  <option value="13">Model 13 - Heavy Logging Slash</option>
-</select><br/>
-<button type="button" onclick="showFuelModelInfo()" style="padding:5px 10px; background:#17a2b8; color:white; border:none; border-radius:4px; cursor:pointer;">ℹ️ Info</button><br/><br/>
+          
+          <label>Fuel Model:</label>
+          <select id="fuelModel" style="width:100%; padding:5px; margin-bottom:10px;">
+            <option value="1">Model 1 - Short Grass (1 foot)</option>
+            <option value="2">Model 2 - Timber (grass and understory)</option>
+            <option value="3">Model 3 - Tall Grass (2.5 feet)</option>
+            <option value="4">Model 4 - Chaparral (6 feet)</option>
+            <option value="5">Model 5 - Brush (2 feet)</option>
+            <option value="6">Model 6 - Dormant Brush</option>
+            <option value="7">Model 7 - Southern Rough</option>
+            <option value="8">Model 8 - Closed Timber Litter</option>
+            <option value="9">Model 9 - Hardwood Litter</option>
+            <option value="10">Model 10 - Timber (litter and understory)</option>
+            <option value="11">Model 11 - Light Logging Slash</option>
+            <option value="12">Model 12 - Medium Logging Slash</option>
+            <option value="13">Model 13 - Heavy Logging Slash</option>
+          </select><br/>
+          <button type="button" onclick="showFuelModelInfo()" style="padding:5px 10px; background:#17a2b8; color:white; border:none; border-radius:4px; cursor:pointer;">ℹ️ Info</button><br/><br/>
 
           <label>Slope (%):</label><input type="number" id="slope" value="0" /><br/><br/>
           <label>Fuel Moisture (%):</label><input type="number" id="fuelMoisture" value="8" /><br/><br/>
-                    <button type="button" onclick="calculateMoisture()" style="padding:10px 20px; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer; margin-left:10px;">Calculate Moisture</button>
+          
+          <button type="button" onclick="calculateMoisture()" style="padding:10px 20px; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;">Calculate Moisture</button>
           <button onclick="calculateROS()" style="padding:10px 20px; background:#007bff; color:white; border:none; border-radius:4px; cursor:pointer;">Calculate</button>
         </div>
         <div id="results" style="margin-top:20px; padding:10px; background:#f0f0f0; border-radius:4px;"></div>
       </div>
     </div>
-<span id="status-noaa" class="badge" title="NOAA Weather API">NOAA ⏳</span>
+
+        <span id="status-noaa" class="badge" title="NOAA Weather API">NOAA ⏳</span>
         <span id="status-firms" class="badge" title="NASA FIRMS GeoJSON">FIRMS ⏳</span>
         <span id="status-tiles" class="badge" title="Map tiles (OSM)">Tiles ⏳</span>
       </div>
@@ -186,9 +189,9 @@
       const BUFFER_KM = 30; // conservative proximity window for nearby hotspots
 
       // FIRMS endpoint referenced in the original file (appears to be geojson)
-  const FIRMS_URL = "https://firms.modaps.eosdis.nasa.gov/api/area/geojson/6ec6f9501dda0774853f77ee933238ed/VIIRS_NOAA20_NRT/-79,36,-77,38/1"
+      const FIRMS_URL = "https://firms.modaps.eosdis.nasa.gov/api/area/geojson/6ec6f9501dda0774853f77ee933238ed/VIIRS_NOAA20_NRT/-79,36,-77,38/1"
   
-    // --------------------------- Status Helpers ----------------------------
+      // --------------------------- Status Helpers ----------------------------
       function setBadge(id, state, label){
         const el = document.getElementById(id);
         if(!el) return;
@@ -403,88 +406,86 @@
         });
       }
     </script>
-<script src="fire-behavior.js"></script>
+
+    <script src="fire-behavior.js"></script>
+    <script src="fuel-models.js"></script>
+    <script>
+      // R.O.S. Calculator Modal Controls
+      const rosCalcBtn = document.getElementById('rosCalc');
+      const rosModal = document.getElementById('rosModal');
+      const closeModal = document.getElementById('closeModal');
+      
+      if (rosCalcBtn) {
+        rosCalcBtn.addEventListener('click', () => {
+          rosModal.style.display = 'block';
+        });
+      }
+      
+      if (closeModal) {
+        closeModal.addEventListener('click', () => {
+          rosModal.style.display = 'none';
+        });
+      }
+      
+      window.onclick = function(event) {
+        if (event.target == rosModal) {
+          rosModal.style.display = 'none';
+        }
+      };
+      
+      // Show fuel model information
+      function showFuelModelInfo() {
+        const fuelModel = parseInt(document.getElementById('fuelModel').value);
+        if (FUEL_MODELS[fuelModel]) {
+          const model = FUEL_MODELS[fuelModel];
+          alert(`Fuel Model ${fuelModel}: ${model.name}\n\n${model.description}\n\nTypical: ${model.typical}`);
+        } else {
+          alert('Please select a valid fuel model (1-13)');
+        }
+      }
+      
+      // Calculate fuel moisture from current weather
+      function calculateMoisture() {
+        const tempF = 70;
+        const relHumidity = 45;
+        
+        const moistures = FuelMoistureCalculator.estimateFromWeather({
+          tempF: tempF,
+          relHumidity: relHumidity
+        });
+        
+        document.getElementById('fuelMoisture').value = moistures.oneHour;
+        
+        alert(`Estimated Fuel Moistures (based on T=${tempF}°F, RH=${relHumidity}%):\n\n` +
+              `1-hour: ${moistures.oneHour}%\n` +
+              `10-hour: ${moistures.tenHour}%\n` +
+              `100-hour: ${moistures.hundredHour}%\n` +
+              `Live Herb: ${moistures.liveHerbaceous}%\n` +
+              `Live Stem: ${moistures.liveStem}%\n\n` +
+              `1-hour moisture has been set in calculator.`);
+      }
+      
+      // Calculate Rate of Spread
+      function calculateROS() {
+        const windSpeed = parseFloat(document.getElementById('windSpeed').value);
+        const fuelModel = parseInt(document.getElementById('fuelModel').value);
+        const slope = parseFloat(document.getElementById('slope').value);
+        const moisture = parseFloat(document.getElementById('fuelMoisture').value);
+        
+        const results = window.FireBehavior.predictFireBehavior({
+          windSpeed: windSpeed,
+          fuelMoisture: moisture,
+          slope: slope,
+          fuelModel: fuelModel.toString()
+        });    
+        
+        document.getElementById('results').innerHTML = `
+          <h3>Results:</h3>
+          <p><strong>Rate of Spread:</strong> ${results.rateOfSpread.chainsPerHour.toFixed(2)} chains/hour</p>
+          <p><strong>Flame Length:</strong> ${results.flameLength.feet.toFixed(1)} feet</p>
+          <p><strong>Fireline Intensity:</strong> ${results.firelineIntensity.toFixed(0)} BTU/ft/s</p>
+        `;
+      }
+    </script>
   </body>
 </html>
-
-
-<script src="fuel-models.js"></script>
-<script>
-  // R.O.S. Calculator Modal Controls
-  const rosCalcBtn = document.getElementById('rosCalc');
-  const rosModal = document.getElementById('rosModal');
-  const closeModal = document.getElementById('closeModal');
-  
-  if (rosCalcBtn) {
-    rosCalcBtn.addEventListener('click', () => {
-      rosModal.style.display = 'block';
-    });
-  }
-  
-  if (closeModal) {
-    closeModal.addEventListener('click', () => {
-      rosModal.style.display = 'none';
-    });
-  }
-  
-  window.onclick = function(event) {
-    if (event.target == rosModal) {
-      rosModal.style.display = 'none';
-    }
-  };
-  
- 
-
-      
-  // Show fuel model information
-  function showFuelModelInfo() {
-    const fuelModel = parseInt(document.getElementById('fuelModel').value);
-    if (FUEL_MODELS[fuelModel]) {
-      const model = FUEL_MODELS[fuelModel];
-      alert(`Fuel Model ${fuelModel}: ${model.name}\n\n${model.description}\n\nTypical: ${model.typical}`);
-    } else {
-      alert('Please select a valid fuel model (1-13)');
-    }
-  }
-  
-  // Calculate fuel moisture from current weather
-  function calculateMoisture() {
-    // For now, use simplified estimation
-    // In production, this would pull from live weather data
-    const tempF = 70; // Default - would come from weather API
-    const relHumidity = 45; // Default - would come from weather API
-    
-    const moistures = FuelMoistureCalculator.estimateFromWeather({
-      tempF: tempF,
-      relHumidity: relHumidity
-    });
-    
-    // Update the fuel moisture input
-    document.getElementById('fuelMoisture').value = moistures.oneHour;
-    
-    // Show detail
-    alert(`Estimated Fuel Moistures (based on T=${tempF}°F, RH=${relHumidity}%):\n\n` +
-          `1-hour: ${moistures.oneHour}%\n` +
-          `10-hour: ${moistures.tenHour}%\n` +
-          `100-hour: ${moistures.hundredHour}%\n` +
-          `Live Herb: ${moistures.liveHerbaceous}%\n` +
-          `Live Stem: ${moistures.liveStem}%\n\n` +
-          `1-hour moisture has been set in calculator.`);
-  }
-  
-  const moisture = parseFloat(document.getElementById('fuelMoisture').value);
-    
-        const results = window.FireBehavior.predictFireBehavior({
-            windSpeed: windSpeed,
-            fuelMoisture: moisture,
-            slope: slope,
-            fuelModel: fuelModel.toString()
-        });    
-    document.getElementById('results').innerHTML = `
-      <h3>Results:</h3>
-      <p><strong>Rate of Spread:</strong> ${results.rateOfSpread.chainsPerHour.toFixed(2)} chains/hour</p>
-      <p><strong>Flame Length:</strong> ${results.flameLength.feet} feet</p>
-      <p><strong>Fireline Intensity:</strong> ${results.flameresults.firelineIntensityLength.feet} BTU/ft/s</p>
-    `;
-  }
-</script>
