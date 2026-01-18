@@ -459,15 +459,17 @@
   
   const moisture = parseFloat(document.getElementById('fuelMoisture').value);
     
-    const calculator = new FireBehaviorCalculator();
-    const results = calculator.calculateFireBehavior(windSpeed, fuelModel, slope, moisture);
-    
+        const results = window.FireBehavior.predictFireBehavior({
+            windSpeed: windSpeed,
+            fuelMoisture: moisture,
+            slope: slope,
+            fuelModel: fuelModel.toString()
+        });    
     document.getElementById('results').innerHTML = `
       <h3>Results:</h3>
-      <p><strong>Rate of Spread:</strong> ${results.rateOfSpread.toFixed(2)} chains/hour</p>
-      <p><strong>Flame Length:</strong> ${results.flameLength.toFixed(2)} feet</p>
-      <p><strong>Fireline Intensity:</strong> ${results.firelineIntensity.toFixed(0)} BTU/ft/s</p>
-      <p><strong>Heat Per Unit Area:</strong> ${results.heatPerUnitArea.toFixed(0)} BTU/ft²</p>
+      <p><strong>Rate of Spread:</strong> ${results.rateOfSpread.chainsPerHour.toFixed(2)} chains/hour</p>
+      <p><strong>Flame Length:</strong> ${results.flameLength.feet} feet</p>
+      <p><strong>Fireline Intensity:</strong> ${results.flameresults.firelineIntensityLength.feet} BTU/ft/s</p>
     `;
   }
 </script>
