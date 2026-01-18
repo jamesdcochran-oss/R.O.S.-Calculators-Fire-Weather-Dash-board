@@ -128,7 +128,24 @@
         <h2>🔥 Rate of Spread Calculator</h2>
         <div>
           <label>Wind Speed (mph):</label><input type="number" id="windSpeed" value="5" /><br/><br/>
-          <label>Fuel Model (1-13):</label><input type="number" id="fuelModel" value="1" min="1" max="13" /><br/><br/> <button type="button" onclick="showFuelModelInfo()" style="padding:5px 10px; margin-left:10px; background:#17a2b8; color:white; border:none; border-radius:4px; cursor:pointer;">ℹ️ Info</button>
+<label>Fuel Model:</label>
+<select id="fuelModel" style="width:100%; padding:5px; margin-bottom:10px;">
+  <option value="1">Model 1 - Short Grass (1 foot)</option>
+  <option value="2">Model 2 - Timber (grass and understory)</option>
+  <option value="3">Model 3 - Tall Grass (2.5 feet)</option>
+  <option value="4">Model 4 - Chaparral (6 feet)</option>
+  <option value="5">Model 5 - Brush (2 feet)</option>
+  <option value="6">Model 6 - Dormant Brush</option>
+  <option value="7">Model 7 - Southern Rough</option>
+  <option value="8">Model 8 - Closed Timber Litter</option>
+  <option value="9">Model 9 - Hardwood Litter</option>
+  <option value="10">Model 10 - Timber (litter and understory)</option>
+  <option value="11">Model 11 - Light Logging Slash</option>
+  <option value="12">Model 12 - Medium Logging Slash</option>
+  <option value="13">Model 13 - Heavy Logging Slash</option>
+</select><br/>
+<button type="button" onclick="showFuelModelInfo()" style="padding:5px 10px; background:#17a2b8; color:white; border:none; border-radius:4px; cursor:pointer;">ℹ️ Info</button><br/><br/>
+
           <label>Slope (%):</label><input type="number" id="slope" value="0" /><br/><br/>
           <label>Fuel Moisture (%):</label><input type="number" id="fuelMoisture" value="8" /><br/><br/>
                     <button type="button" onclick="calculateMoisture()" style="padding:10px 20px; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer; margin-left:10px;">Calculate Moisture</button>
