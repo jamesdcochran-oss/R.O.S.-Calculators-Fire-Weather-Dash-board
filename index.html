@@ -410,7 +410,7 @@
 
 <script src="fuel-models.js"></script>
 <script>
-  // R.O.S. Calculator
+  // R.O.S. Calculator Modal Controls
   const rosCalcBtn = document.getElementById('rosCalc');
   const rosModal = document.getElementById('rosModal');
   const closeModal = document.getElementById('closeModal');
@@ -433,10 +433,61 @@
     }
   };
   
+  // Show fuel model information
+  function showFuelModelInfo() {
+    const fuelModel = parseInt(document.getElementById('fuelModel').value);
+    if (FUEL_MODELS[fuelModel]) {
+      const model = FUEL_MODELS[fuelModel];
+      alert(`Fuel Model ${fuelModel}: ${model.name}\n\n${model.description}\n\nTypical: ${model.typical}`);
+    } else {
+      alert('Please select a valid fuel model (1-13)');
+    }
+  }
+  
+  // Calculate fuel moisture from current weather
+  function calculateMoisture() {
+    const tempF = 70;
+    const relHumidity = 45;
+    
+    const moistures = FuelMoistureCalculator.estimateFromWeather({
+      tempF: tempF,
+      relHumidity: relHumidity
+    });
+    
+    document.getElementById('fuelMoisture').value = moistures.oneHour;
+    
+    alert(`Estimated Fuel Moistures (based on T=${tempF}°F, RH=${relHumidity}%):\n\n` +
+          `1-hour: ${moistures.oneHour}%\n` +
+          `10-hour: ${moistures.tenHour}%\n` +
+          `100-hour: ${moistures.hundredHour}%\n` +
+          `Live Herb: ${moistures.liveHerbaceous}%\n` +
+          `Live Stem: ${moistures.liveStem}%\n\n` +
+          `1-hour moisture has been set in calculator.`);
+  }
+  
+  // Calculate Rate of Spread
   function calculateROS() {
     const windSpeed = parseFloat(document.getElementById('windSpeed').value);
     const fuelModel = parseInt(document.getElementById('fuelModel').value);
     const slope = parseFloat(document.getElementById('slope').value);
+    const moisture = parseFloat(document.getElementById('fuelMoisture').value);
+    
+    const results = window.FireBehavior.predictFireBehavior({
+      windSpeed: windSpeed,
+      fuelMoisture: moisture,
+      slope: slope,
+      fuelModel: fuelModel.toString()
+    });    
+    
+    document.getElementById('results').innerHTML = `
+      <h3>Results:</h3>
+      <p><strong>Rate of Spread:</strong> ${results.rateOfSpread.chainsPerHour.toFixed(2)} chains/hour</p>
+      <p><strong>Flame Length:</strong> ${results.flameLength.feet.toFixed(1)} feet</p>
+      <p><strong>Fireline Intensity:</strong> ${results.firelineIntensity.btuPerFootPerSecond.toFixed(0)} BTU/ft/s</p>
+    `;
+  }
+</script>
+
       
   // Show fuel model information
   function showFuelModelInfo() {
