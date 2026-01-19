@@ -138,6 +138,10 @@
                     throw new Error('Humidity must be between 0 and 100');
                 }
                 
+                if (hours < 1 || hours > 48) {
+                    throw new Error('Time period must be between 1 and 48 hours');
+                }
+                
                 // Compute EMC
                 const emc = FuelMoistureCalc.computeEMC(temperature, humidity);
                 

@@ -38,19 +38,22 @@
             throw new Error('Humidity must be between 0 and 100');
         }
 
-        // Simplified EMC calculation based on Simard (1968) equations
-        // Using simplified approximation for demonstration
+        // Simplified EMC calculation based on standard moisture equations
+        // EMC varies with temperature and relative humidity
         let emc;
         
         if (humidity < 10) {
-            emc = 0.03 + 0.2626 * humidity - 0.00104 * temperature;
+            // Very low humidity - use simplified formula
+            emc = 0.03 + 0.2626 * humidity + 0.00104 * temperature;
         } else if (humidity <= 50) {
-            emc = 2.22 - 0.160 * humidity + 0.0140 * temperature;
+            // Low to moderate humidity
+            emc = 2.22 + 0.160 * humidity + 0.0140 * temperature;
         } else {
-            emc = 21.06 - 0.4944 * humidity + 0.005565 * Math.pow(humidity, 2) - 0.00063 * humidity * temperature;
+            // High humidity - non-linear relationship
+            emc = 21.06 - 0.4944 * humidity + 0.005565 * Math.pow(humidity, 2) + 0.00063 * temperature;
         }
         
-        // Ensure EMC is within realistic bounds
+        // Ensure EMC is within realistic bounds (1-35%)
         emc = Math.max(1, Math.min(35, emc));
         
         return parseFloat(emc.toFixed(2));
