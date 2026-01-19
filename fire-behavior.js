@@ -17,7 +17,8 @@ if (typeof require !== 'undefined') {
 
 // ==================== FUEL MODEL DEFINITIONS ====================
 
-const FUEL_MODELS = {
+// Define FUEL_MODELS_BEHAVIOR to avoid naming conflicts with fuel-models.js
+const FUEL_MODELS_BEHAVIOR = {
   '1': {
     name: 'Short Grass (1 ft)',
     load: 0.74,        // tons/acre
@@ -111,7 +112,7 @@ const FUEL_MODELS = {
  * @returns {object} { ros: chains/hour, rosMetric: m/min }
  */
 function calculateRateOfSpread(windSpeed, fuelMoisture, slope, fuelModel = '2') {
-  const fuel = FUEL_MODELS[fuelModel];
+  const fuel = FUEL_MODELS_BEHAVIOR[fuelModel];
   if (!fuel) {
     throw new Error('Invalid fuel model');
   }
@@ -222,7 +223,7 @@ function predictFireBehavior(params) {
     useEMC = false
   } = params;
 
-  const fuel = FUEL_MODELS[fuelModel];
+  const fuel = FUEL_MODELS_BEHAVIOR[fuelModel];
   if (!fuel) {
     return { error: 'Invalid fuel model' };
   }
@@ -295,7 +296,7 @@ function predictFireBehavior(params) {
 // Make functions globally available
 if (typeof window !== 'undefined') {
   window.FireBehavior = {
-    FUEL_MODELS,
+    FUEL_MODELS: FUEL_MODELS_BEHAVIOR,
     calculateRateOfSpread,
     calculateFlameLength,
     calculateFirelineIntensity,
