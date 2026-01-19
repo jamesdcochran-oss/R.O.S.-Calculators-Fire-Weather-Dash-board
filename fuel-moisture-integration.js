@@ -3,7 +3,15 @@
  * Integrates fuel-moisture-calculator library with the Fire Weather Dashboard
  */
 
-const FuelMoistureLib = require('fuel-moisture-calculator');
+// Import fuel moisture calculator if in Node.js environment
+let FuelMoistureLib = null;
+if (typeof require !== 'undefined') {
+  try {
+    FuelMoistureLib = require('fuel-moisture-calculator');
+  } catch (e) {
+    // Module not available, will use simplified version
+  }
+}
 
 /**
  * Compute Equilibrium Moisture Content (EMC) using simplified Nelson's equation
@@ -148,8 +156,8 @@ if (typeof module !== 'undefined' && module.exports) {
     stepMoisture,
     runModel,
     calculateDryingPattern,
-    // Re-export base library functions
-    calculateMoisture: FuelMoistureLib.calculateMoisture
+    // Re-export base library functions if available
+    calculateMoisture: FuelMoistureLib ? FuelMoistureLib.calculateMoisture : null
   };
 }
 

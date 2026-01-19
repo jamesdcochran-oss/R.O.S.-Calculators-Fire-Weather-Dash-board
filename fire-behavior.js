@@ -128,10 +128,10 @@ function calculateRateOfSpread(windSpeed, fuelMoisture, slope, fuelModel = '2') 
   
   const reactionIntensity = (fuel.load * fuel.heatContent * moistureDamping) / 60;
 
-  // Propagating flux ratio
+  // Propagating flux ratio - simplified calculation
   const sigma = fuel.savRatio;
-  const propagatingFlux = Math.exp((0.792 + 0.681 * Math.sqrt(sigma)) * 
-                                   (0.1 + fuel.depth));
+  const beta = fuel.load / (fuel.depth * 32); // Packing ratio (approximate)
+  const propagatingFlux = Math.exp((0.792 + 0.681 * Math.sqrt(sigma)) * (beta + 0.1)) / 1000;
 
   // Wind coefficient
   const windCoeff = windSpeed > 0 ? 
