@@ -120,8 +120,8 @@
         };
     }
 
-    // Export for browser
-    const FuelMoistureCalculator = {
+    // Export for browser with unique namespace
+    const FuelMoistureCalc = {
         calculateMoisture,
         computeEMC,
         stepMoisture,
@@ -130,12 +130,12 @@
 
     // Make available globally in browser
     if (typeof window !== 'undefined') {
-        window.FuelMoistureCalculator = FuelMoistureCalculator;
+        window.FuelMoistureCalc = FuelMoistureCalc;
     }
 
     // Also support CommonJS for Node.js testing
     if (typeof module !== 'undefined' && module.exports) {
-        module.exports = FuelMoistureCalculator;
+        module.exports = FuelMoistureCalc;
     }
 
 })(typeof window !== 'undefined' ? window : global);

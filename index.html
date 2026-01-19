@@ -139,7 +139,7 @@
                 }
                 
                 // Compute EMC
-                const emc = FuelMoistureCalculator.computeEMC(temperature, humidity);
+                const emc = FuelMoistureCalc.computeEMC(temperature, humidity);
                 
                 // Initial fuel moisture values (can be customized)
                 const initial1hr = 10;
@@ -148,10 +148,10 @@
                 const initial1000hr = 16;
                 
                 // Calculate moisture after specified time period for each fuel class
-                const moisture1hr = FuelMoistureCalculator.stepMoisture(initial1hr, emc, hours, 1);
-                const moisture10hr = FuelMoistureCalculator.stepMoisture(initial10hr, emc, hours, 10);
-                const moisture100hr = FuelMoistureCalculator.stepMoisture(initial100hr, emc, hours, 100);
-                const moisture1000hr = FuelMoistureCalculator.stepMoisture(initial1000hr, emc, hours, 1000);
+                const moisture1hr = FuelMoistureCalc.stepMoisture(initial1hr, emc, hours, 1);
+                const moisture10hr = FuelMoistureCalc.stepMoisture(initial10hr, emc, hours, 10);
+                const moisture100hr = FuelMoistureCalc.stepMoisture(initial100hr, emc, hours, 100);
+                const moisture1000hr = FuelMoistureCalc.stepMoisture(initial1000hr, emc, hours, 1000);
                 
                 const resultsDiv = document.getElementById('results');
                 
