@@ -6,22 +6,186 @@
     <title>Fire Weather Dashboard</title>
     <script src="fuel-models.js"></script>
     <script src="fire-behavior.js"></script>
+    <script src="fuel-moisture-calculator.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #ff6b35;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #444;
+            margin-top: 30px;
+        }
+        .calculator-container {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        button {
+            background: #ff6b35;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #e55a2b;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .result-item {
+            margin: 10px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #ff6b35;
+            border-radius: 4px;
+        }
+        .result-item strong {
+            color: #333;
+            font-size: 16px;
+        }
+        .result-item small {
+            color: #777;
+            display: block;
+            margin-top: 5px;
+        }
+        .emc-highlight {
+            border-left-color: #4CAF50;
+            background: #f1f8f4;
+        }
+        .error {
+            background: #fee;
+            border-left-color: #f44336;
+            color: #c00;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Fire Weather Results</h1>
-    <div id="results"></div>
+    <h1>🔥 Fire Weather Results</h1>
+    
+    <div class="calculator-container">
+        <h2>Fuel Moisture Calculator</h2>
+        <p>Calculate fire weather fuel moisture content for different timelag classes based on current weather conditions.</p>
+        
+        <div class="form-group">
+            <label for="temperature">Temperature (°F):</label>
+            <input type="number" id="temperature" value="75" step="0.1">
+        </div>
+        
+        <div class="form-group">
+            <label for="humidity">Relative Humidity (%):</label>
+            <input type="number" id="humidity" value="50" min="0" max="100" step="0.1">
+        </div>
+        
+        <div class="form-group">
+            <label for="hours">Time Period (hours):</label>
+            <input type="number" id="hours" value="12" min="1" max="48" step="1">
+        </div>
+        
+        <button onclick="calculateFuelMoisture()">Calculate Fuel Moisture</button>
+        
+        <div id="results" class="results"></div>
+    </div>
 
     <script>
-        function displayResults() {
-            // This function would integrate calculations from fuel-models.js and fire-behavior.js
-            // For demo purposes, I'll create a static message
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = '<p>Dynamic Fire Weather Results Displayed Here.</p>';
-            // You would call functions from fuel-models.js and fire-behavior.js to get real results
+        function calculateFuelMoisture() {
+            try {
+                const temperature = parseFloat(document.getElementById('temperature').value);
+                const humidity = parseFloat(document.getElementById('humidity').value);
+                const hours = parseFloat(document.getElementById('hours').value);
+                
+                // Validate inputs
+                if (isNaN(temperature) || isNaN(humidity) || isNaN(hours)) {
+                    throw new Error('Please enter valid numbers for all fields');
+                }
+                
+                if (humidity < 0 || humidity > 100) {
+                    throw new Error('Humidity must be between 0 and 100');
+                }
+                
+                // Compute EMC
+                const emc = FuelMoistureCalculator.computeEMC(temperature, humidity);
+                
+                // Initial fuel moisture values (can be customized)
+                const initial1hr = 10;
+                const initial10hr = 12;
+                const initial100hr = 14;
+                const initial1000hr = 16;
+                
+                // Calculate moisture after specified time period for each fuel class
+                const moisture1hr = FuelMoistureCalculator.stepMoisture(initial1hr, emc, hours, 1);
+                const moisture10hr = FuelMoistureCalculator.stepMoisture(initial10hr, emc, hours, 10);
+                const moisture100hr = FuelMoistureCalculator.stepMoisture(initial100hr, emc, hours, 100);
+                const moisture1000hr = FuelMoistureCalculator.stepMoisture(initial1000hr, emc, hours, 1000);
+                
+                const resultsDiv = document.getElementById('results');
+                
+                resultsDiv.innerHTML = `
+                    <div class="result-item emc-highlight">
+                        <strong>Equilibrium Moisture Content (EMC): ${emc}%</strong>
+                        <small>Target moisture content for current atmospheric conditions (${temperature}°F, ${humidity}% RH)</small>
+                    </div>
+                    <div class="result-item">
+                        <strong>1-Hour Fuel Moisture: ${moisture1hr}%</strong>
+                        <small>Fine fuels &lt; 0.25" diameter (grass, needles, small twigs) - Fast response to weather changes</small>
+                    </div>
+                    <div class="result-item">
+                        <strong>10-Hour Fuel Moisture: ${moisture10hr}%</strong>
+                        <small>Fuels 0.25" - 1" diameter (small branches, heavy twigs) - Moderate response</small>
+                    </div>
+                    <div class="result-item">
+                        <strong>100-Hour Fuel Moisture: ${moisture100hr}%</strong>
+                        <small>Fuels 1" - 3" diameter (medium branches) - Slow response to weather changes</small>
+                    </div>
+                    <div class="result-item">
+                        <strong>1000-Hour Fuel Moisture: ${moisture1000hr}%</strong>
+                        <small>Fuels 3" - 8" diameter (large logs, stumps) - Very slow response to weather changes</small>
+                    </div>
+                `;
+                
+            } catch (error) {
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = `<div class="error">Error: ${error.message}</div>`;
+            }
         }
-
-        // Call the function to display results
-        displayResults();
+        
+        // Calculate on page load with default values
+        calculateFuelMoisture();
     </script>
 </body>
 </html>
