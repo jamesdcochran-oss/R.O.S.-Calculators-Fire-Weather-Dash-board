@@ -145,11 +145,13 @@
                 // Compute EMC
                 const emc = FuelMoistureCalc.computeEMC(temperature, humidity);
                 
-                // Initial fuel moisture values (can be customized)
-                const initial1hr = 10;
-                const initial10hr = 12;
-                const initial100hr = 14;
-                const initial1000hr = 16;
+                // Initial fuel moisture values for different timelag classes
+                // These represent typical starting conditions before atmospheric adjustment
+                // Values increase with timelag as larger fuels respond more slowly to weather
+                const initial1hr = 10;    // Fine fuels - quick response
+                const initial10hr = 12;   // Small branches - moderate response
+                const initial100hr = 14;  // Medium branches - slow response
+                const initial1000hr = 16; // Large logs - very slow response
                 
                 // Calculate moisture after specified time period for each fuel class
                 const moisture1hr = FuelMoistureCalc.stepMoisture(initial1hr, emc, hours, 1);

@@ -25,6 +25,11 @@
     /**
      * Compute Equilibrium Moisture Content (EMC) using simplified equations
      * Based on temperature and relative humidity
+     * 
+     * These formulas are simplified approximations based on standard fuel moisture
+     * research. More accurate calculations would use Nelson (2000) or NFDRS equations
+     * which account for additional factors like fuel type and atmospheric pressure.
+     * 
      * @param {number} temperature - Temperature in Fahrenheit
      * @param {number} humidity - Relative humidity in percentage (0-100)
      * @returns {number} - EMC in percentage
