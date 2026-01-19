@@ -1,0 +1,21 @@
+{
+  "name": "r.o.s.-calculators-fire-weather-dash-board",
+  "version": "1.0.0",
+  "main": "fire-behavior.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "fuel-moisture-calculator": "github:jamesdcochran-oss/fuel-moisture-calculator"
+  },
+  "devDependencies": {
+    "jest": "^30.2.0"
+  }
+}

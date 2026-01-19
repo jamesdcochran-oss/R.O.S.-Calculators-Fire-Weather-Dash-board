@@ -2,7 +2,18 @@
  * Five Forks Fire Behavior Calculator
  * Implements Rothermel fire spread model and Byram flame length
  * For use with Five Forks Fire Weather Dashboard
+ * Integrated with fuel-moisture-calculator library
  */
+
+// Import fuel moisture calculator if in Node.js environment
+let FuelMoistureIntegration = null;
+if (typeof require !== 'undefined') {
+  try {
+    FuelMoistureIntegration = require('./fuel-moisture-integration.js');
+  } catch (e) {
+    // Module not available, will use window object in browser
+  }
+}
 
 // ==================== FUEL MODEL DEFINITIONS ====================
 
@@ -196,8 +207,8 @@ function calculateFirelineIntensity(ros, fuelLoad, heatContent = 8000) {
 // ==================== COMPLETE FIRE BEHAVIOR PREDICTION ====================
 
 /**
- * Complete fire behavior prediction
- * @param {object} params - { windSpeed, fuelMoisture, slope, fuelModel, temp, rh }
+ * Complete fire behavior prediction with optional EMC calculation
+ * @param {object} params - { windSpeed, fuelMoisture, slope, fuelModel, temp, rh, useEMC }
  * @returns {object} Complete fire behavior outputs
  */
 function predictFireBehavior(params) {
@@ -207,7 +218,8 @@ function predictFireBehavior(params) {
     slope = 0,
     fuelModel = '2',
     temp = 70,
-    rh = 30
+    rh = 30,
+    useEMC = false
   } = params;
 
   const fuel = FUEL_MODELS[fuelModel];
@@ -215,14 +227,27 @@ function predictFireBehavior(params) {
     return { error: 'Invalid fuel model' };
   }
 
+  // Calculate EMC if requested and functions are available
+  let calculatedEMC = null;
+  let effectiveMoisture = fuelMoisture;
+  
+  if (useEMC && temp && rh) {
+    const fuelMoistureCalc = FuelMoistureIntegration || (typeof window !== 'undefined' ? window.FuelMoistureIntegration : null);
+    if (fuelMoistureCalc && fuelMoistureCalc.computeEMC) {
+      calculatedEMC = fuelMoistureCalc.computeEMC(temp, rh);
+      effectiveMoisture = calculatedEMC;
+    }
+  }
+
   // Calculate rate of spread
-  const spreadResult = calculateRateOfSpread(windSpeed, fuelMoisture, slope, fuelModel);
+  const spreadResult = calculateRateOfSpread(windSpeed, effectiveMoisture, slope, fuelModel);
   
   if (!spreadResult.canSpread) {
     return {
       canSpread: false,
       message: 'Fuel moisture exceeds extinction moisture. Fire will not spread.',
-      fuelModel: fuel.name
+      fuelModel: fuel.name,
+      emc: calculatedEMC
     };
   }
 
@@ -236,7 +261,7 @@ function predictFireBehavior(params) {
   // Calculate flame length
   const flameResult = calculateFlameLength(intensity);
 
-  return {
+  const result = {
     canSpread: true,
     fuelModel: fuel.name,
     rateOfSpread: {
@@ -251,12 +276,18 @@ function predictFireBehavior(params) {
     firelineIntensity: Math.round(intensity),
     conditions: {
       windSpeed: windSpeed,
-      fuelMoisture: fuelMoisture,
+      fuelMoisture: effectiveMoisture,
       slope: slope,
       temp: temp,
       rh: rh
     }
   };
+
+  if (calculatedEMC !== null) {
+    result.emc = Math.round(calculatedEMC * 10) / 10;
+  }
+
+  return result;
 }
 
 // ==================== EXPORT ====================
@@ -271,3 +302,15 @@ if (typeof window !== 'undefined') {
     predictFireBehavior
   };
 }
+
+// Export for Node.js
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = {
+    FUEL_MODELS,
+    calculateRateOfSpread,
+    calculateFlameLength,
+    calculateFirelineIntensity,
+    predictFireBehavior
+  };
+}
+
